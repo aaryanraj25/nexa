@@ -91,8 +91,8 @@ class ProductListScreen extends StatelessWidget {
                                 ),
                                 if (cartController.itemCount > 0)
                                   Positioned(
-                                    right: 6.w,
-                                    top: 6.h,
+                                    right: 0.w,
+                                    top: 0.h,
                                     child: Container(
                                       padding: EdgeInsets.all(6.w),
                                       decoration: BoxDecoration(
@@ -102,7 +102,7 @@ class ProductListScreen extends StatelessWidget {
                                             AppColors.error.withOpacity(0.8),
                                           ],
                                         ),
-                                        borderRadius: BorderRadius.circular(12.r),
+                                        borderRadius: BorderRadius.circular(20.r),
                                         boxShadow: [
                                           BoxShadow(
                                             color: AppColors.error.withOpacity(0.3),
@@ -112,14 +112,14 @@ class ProductListScreen extends StatelessWidget {
                                         ],
                                       ),
                                       constraints: BoxConstraints(
-                                        minWidth: 20.w,
-                                        minHeight: 20.w,
+                                        minWidth: 16.w,
+                                        minHeight: 16.w,
                                       ),
                                       child: Text(
                                         '${cartController.itemCount}',
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 11.sp,
+                                          fontSize: 8.sp,
                                           fontWeight: FontWeight.w700,
                                         ),
                                         textAlign: TextAlign.center,
