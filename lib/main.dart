@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:nexa/core/routes/app_pages.dart';
 import 'core/constants/app_colors.dart';
 import 'core/constants/app_strings.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Set preferred orientations
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
   
-  // Set status bar style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -68,8 +67,8 @@ class MyApp extends StatelessWidget {
               brightness: Brightness.light,
             ),
           ),
-          // initialRoute: AppPages.initial,
-          // getPages: AppPages.routes,
+          initialRoute: AppPages.initial,
+          getPages: AppPages.routes,
         );
       },
     );
