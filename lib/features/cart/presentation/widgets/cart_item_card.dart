@@ -35,7 +35,6 @@ class CartItemCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Product Image
           Container(
             width: 80.w,
             height: 80.w,
@@ -63,8 +62,6 @@ class CartItemCard extends StatelessWidget {
           ),
           
           SizedBox(width: 16.w),
-          
-          // Product Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,11 +83,8 @@ class CartItemCard extends StatelessWidget {
                 ),
                 
                 SizedBox(height: 8.h),
-                
-                // Quantity Controls
                 Row(
                   children: [
-                    // Decrease Button
                     GestureDetector(
                       onTap: () => controller.updateQuantity(
                         cartItem.product.id,
@@ -122,8 +116,6 @@ class CartItemCard extends StatelessWidget {
                     ),
                     
                     SizedBox(width: 12.w),
-                    
-                    // Increase Button
                     GestureDetector(
                       onTap: () => controller.updateQuantity(
                         cartItem.product.id,
