@@ -4,7 +4,6 @@ import 'package:nexa/core/routes/app_routes.dart';
 import 'package:nexa/features/cart/presentation/controller/cart_controller.dart';
 import 'package:nexa/features/product_list/presentation/controller/product_list_controller.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../../core/widgets/custom_error.dart';
@@ -23,67 +22,141 @@ class ProductListScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: CustomScrollView(
         slivers: [
-          // App Bar
           SliverAppBar(
             floating: true,
             pinned: true,
             elevation: 0,
+            expandedHeight: 120.h,
             backgroundColor: AppColors.surface,
-            title: Text(
-              AppStrings.appName,
-              style: AppTextStyles.heading2.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-            actions: [
-              // Cart Icon with Badge
-              Obx(() => Stack(
-                children: [
-                  IconButton(
-                    onPressed: () => Get.toNamed(AppRoutes.cart),
-                    icon: Icon(
-                      Icons.shopping_cart_outlined,
-                      color: AppColors.primary,
-                      size: 24.w,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.surface,
+                      AppColors.surfaceElevated,
+                    ],
+                  ),
+                ),
+                child: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'NEXA',
+                                  style: TextStyle(
+                                    fontSize: 28.sp,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.primary,
+                                    letterSpacing: 2.0,
+                                  ),
+                                ),
+                                Text(
+                                  'Premium Collection',
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.textSecondary,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Obx(() => Stack(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(16.r),
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () => Get.toNamed(AppRoutes.cart),
+                                    icon: Icon(
+                                      Icons.shopping_bag_outlined,
+                                      color: AppColors.primary,
+                                      size: 26.w,
+                                    ),
+                                  ),
+                                ),
+                                if (cartController.itemCount > 0)
+                                  Positioned(
+                                    right: 6.w,
+                                    top: 6.h,
+                                    child: Container(
+                                      padding: EdgeInsets.all(6.w),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            AppColors.error,
+                                            AppColors.error.withOpacity(0.8),
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(12.r),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColors.error.withOpacity(0.3),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      constraints: BoxConstraints(
+                                        minWidth: 20.w,
+                                        minHeight: 20.w,
+                                      ),
+                                      child: Text(
+                                        '${cartController.itemCount}',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 11.sp,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            )),
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                      ],
                     ),
                   ),
-                  if (cartController.itemCount > 0)
-                    Positioned(
-                      right: 8.w,
-                      top: 8.h,
-                      child: Container(
-                        padding: EdgeInsets.all(2.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.error,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        constraints: BoxConstraints(
-                          minWidth: 16.w,
-                          minHeight: 16.w,
-                        ),
-                        child: Text(
-                          '${cartController.itemCount}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                ],
-              )),
-              SizedBox(width: 8.w),
-            ],
+                ),
+              ),
+            ),
           ),
-          
-          // Search Bar
           SliverToBoxAdapter(
-            child: CustomSearchBar(),
+            child: Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: AppColors.cardGradient,
+                  borderRadius: BorderRadius.circular(20.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.cardShadow,
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: CustomSearchBar(),
+              ),
+            ),
           ),
-          
-          // Products Grid
           Obx(() {
             if (productController.isLoading.value) {
               return ProductGridLoading();
@@ -91,9 +164,43 @@ class ProductListScreen extends StatelessWidget {
             
             if (productController.errorMessage.isNotEmpty) {
               return SliverToBoxAdapter(
-                child: CustomError(
-                  message: productController.errorMessage.value,
-                  onRetry: productController.retryFetch,
+                child: Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: CustomError(
+                    message: productController.errorMessage.value,
+                    onRetry: productController.retryFetch,
+                  ),
+                ),
+              );
+            }
+            if (productController.searchQuery.value.isNotEmpty && 
+                productController.filteredProducts.isEmpty) {
+              return SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(40.w),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.search_off_outlined,
+                        size: 64.w,
+                        color: AppColors.textMuted,
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        'No products found',
+                        style: AppTextStyles.heading3.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'Try adjusting your search terms',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textLight,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
@@ -102,10 +209,8 @@ class ProductListScreen extends StatelessWidget {
               products: productController.filteredProducts,
             );
           }),
-          
-          // Bottom Spacing
           SliverToBoxAdapter(
-            child: SizedBox(height: 20.h),
+            child: SizedBox(height: 40.h),
           ),
         ],
       ),

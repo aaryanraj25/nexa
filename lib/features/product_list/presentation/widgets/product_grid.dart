@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nexa/features/product_list/data/model/product_list_model.dart';
+import 'package:nexa/features/product_list/presentation/widgets/product_card.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/utils/responsive_helper.dart';
 import '../../../../core/utils/size_config.dart';
-import '../../../../core/widgets/custom_loading.dart';
-import 'product_card.dart';
 
 class ProductGrid extends StatelessWidget {
   final List<ProductModel> products;
@@ -16,31 +14,14 @@ class ProductGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (products.isEmpty) {
-      return SliverToBoxAdapter(
-        child: Container(
-          height: 200.h,
-          child: Center(
-            child: Text(
-              'No products found',
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: ResponsiveHelper.getCrossAxisCount(context),
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 12.w,
-          mainAxisSpacing: 12.h,
+          crossAxisCount: 2,
+          childAspectRatio: 0.68,
+          crossAxisSpacing: 16.w,
+          mainAxisSpacing: 20.h,
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -59,17 +40,97 @@ class ProductGridLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: ResponsiveHelper.getCrossAxisCount(context),
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 12.w,
-          mainAxisSpacing: 12.h,
+          crossAxisCount: 2,
+          childAspectRatio: 0.68,
+          crossAxisSpacing: 16.w,
+          mainAxisSpacing: 20.h,
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            return ProductCardShimmer();
+            return Container(
+              decoration: BoxDecoration(
+                gradient: AppColors.cardGradient,
+                borderRadius: BorderRadius.circular(24.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.cardShadow,
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      margin: EdgeInsets.all(20.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceElevated,
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primary.withOpacity(0.6),
+                          ),
+                          strokeWidth: 2.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 16.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceElevated,
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Container(
+                            height: 12.h,
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceElevated,
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                          Container(
+                            height: 12.h,
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceElevated,
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            height: 20.h,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceElevated,
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
           },
           childCount: 6,
         ),

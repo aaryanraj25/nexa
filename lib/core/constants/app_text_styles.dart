@@ -40,7 +40,7 @@ class AppTextStyles {
       );
 
   static TextStyle get price => TextStyle(
-        fontSize: 14.sp,
+        fontSize: 13.sp,
         fontWeight: FontWeight.bold,
         color: AppColors.primary,
       );

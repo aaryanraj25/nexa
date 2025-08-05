@@ -9,7 +9,6 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/utils/size_config.dart';
 
-
 class ProductCard extends StatelessWidget {
   final ProductModel product;
 
@@ -27,143 +26,176 @@ class ProductCard extends StatelessWidget {
         AppRoutes.productDetail,
         arguments: product,
       ),
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.cardGradient,
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.cardShadow,
+              blurRadius: 24,
+              offset: const Offset(0, 12),
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: AppColors.shadow.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+              spreadRadius: 0,
+            ),
+          ],
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Product Image with Favorite Button
-              Expanded(
-                flex: 2,
-                child: Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(8.w),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.r),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(20.w),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.r),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceElevated,
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
                         child: CachedNetworkImage(
                           imageUrl: product.image,
                           fit: BoxFit.contain,
                           placeholder: (context, url) => Container(
-                            color: AppColors.background,
+                            color: AppColors.surfaceElevated,
                             child: Center(
                               child: CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   AppColors.primary,
                                 ),
-                                strokeWidth: 2,
+                                strokeWidth: 2.5,
                               ),
                             ),
                           ),
                           errorWidget: (context, url, error) => Container(
-                            color: AppColors.background,
+                            color: AppColors.surfaceElevated,
                             child: Icon(
-                              Icons.image_not_supported,
-                              color: AppColors.textLight,
-                              size: 32.w,
+                              Icons.image_not_supported_outlined,
+                              color: AppColors.textMuted,
+                              size: 36.w,
                             ),
                           ),
                         ),
                       ),
                     ),
-                    // Favorite Button
-                    Positioned(
-                      top: 8.h,
-                      right: 8.w,
-                      child: Obx(() => GestureDetector(
-                        onTap: () => controller.toggleFavorite(product.id),
-                        child: Container(
-                          padding: EdgeInsets.all(6.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.surface,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.shadow,
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
+                  ),
+                  // Favorite Button
+                  Positioned(
+                    top: 12.h,
+                    right: 12.w,
+                    child: Obx(() => GestureDetector(
+                      onTap: () => controller.toggleFavorite(product.id),
+                      child: Container(
+                        padding: EdgeInsets.all(10.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.shadow,
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          controller.isFavorite(product.id)
+                              ? Icons.favorite
+                              : Icons.favorite_outline,
+                          color: controller.isFavorite(product.id)
+                              ? AppColors.favoriteActive
+                              : AppColors.favoriteInactive,
+                          size: 18.w,
+                        ),
+                      ),
+                    )),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Product Info
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(18.w, 6.h, 18.w, 18.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Product Title
+                    Text(
+                      product.title,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                        height: 1.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    
+                    SizedBox(height: 4.h),
+                    
+                    // Rating
+                    Row(
+                      children: [
+                        RatingBarIndicator(
+                          rating: product.rating.rate,
+                          itemBuilder: (context, index) => Icon(
+                            Icons.star,
+                            color: AppColors.secondary,
                           ),
-                          child: Icon(
-                            controller.isFavorite(product.id)
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: controller.isFavorite(product.id)
-                                ? AppColors.error
-                                : AppColors.textLight,
-                            size: 16.w,
+                          itemCount: 5,
+                          itemSize: 14.w,
+                          direction: Axis.horizontal,
+                        ),
+                        SizedBox(width: 6.w),
+                        Text(
+                          '(${product.rating.count})',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textLight,
                           ),
                         ),
-                      )),
+                      ],
+                    ),
+                    
+                    SizedBox(height: 8.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 2.h,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.secondary.withOpacity(0.1),
+                            AppColors.accent.withOpacity(0.1),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        '\$${product.price.toStringAsFixed(2)}',
+                        style: AppTextStyles.price.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              
-              // Product Info
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: EdgeInsets.all(12.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Product Title
-                      Text(
-                        product.title,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      
-                      SizedBox(height: 4.h),
-                      
-                      // Rating
-                      Row(
-                        children: [
-                          RatingBarIndicator(
-                            rating: product.rating.rate,
-                            itemBuilder: (context, index) => Icon(
-                              Icons.star,
-                              color: AppColors.warning,
-                            ),
-                            itemCount: 5,
-                            itemSize: 12.w,
-                            direction: Axis.horizontal,
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            '(${product.rating.count})',
-                            style: AppTextStyles.bodySmall,
-                          ),
-                        ],
-                      ),
-                      
-                      Spacer(),
-                      
-                      // Price
-                      Text(
-                        '\$${product.price.toStringAsFixed(2)}',
-                        style: AppTextStyles.price,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
