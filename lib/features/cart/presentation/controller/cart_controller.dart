@@ -9,7 +9,7 @@ class CartController extends GetxController {
   
   double get totalPrice => cartItems.fold(0, (sum, item) => sum + item.totalPrice);
 
-  void addToCart(ProductModel product, int quantity) {
+  void addToCart(ProductModel product, [int quantity = 1]) {
     final existingIndex = cartItems.indexWhere((item) => item.product.id == product.id);
     
     if (existingIndex != -1) {
@@ -41,8 +41,21 @@ class CartController extends GetxController {
     cartItems.clear();
   }
 
+  bool isProductInCart(int productId) {
+    return cartItems.any((item) => item.product.id == productId);
+  }
+
   bool isInCart(int productId) {
     return cartItems.any((item) => item.product.id == productId);
+  }
+
+  int getProductQuantity(int productId) {
+    try {
+      final item = cartItems.firstWhere((item) => item.product.id == productId);
+      return item.quantity;
+    } catch (e) {
+      return 0;
+    }
   }
 
   CartItemModel? getCartItem(int productId) {

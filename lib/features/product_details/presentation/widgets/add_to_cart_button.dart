@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nexa/features/cart/presentation/controller/cart_controller.dart';
 import 'package:nexa/features/product_details/presentation/controller/product_detail_controller.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
@@ -11,7 +12,8 @@ class AddToCartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<ProductDetailController>();
+    final productController = Get.find<ProductDetailController>();
+    final cartController = Get.find<CartController>();
     
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -28,63 +30,94 @@ class AddToCartButton extends StatelessWidget {
       child: SafeArea(
         child: Row(
           children: [
-            // Quantity Selector
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.border),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: controller.decrementQuantity,
-                    icon: Icon(
-                      Icons.remove,
-                      color: AppColors.textSecondary,
-                      size: 20.w,
+            Obx(() {
+              final isInCart = cartController.isProductInCart(productController.product.id);
+              final quantity = cartController.getProductQuantity(productController.product.id);
+              
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: isInCart 
+                          ? () => cartController.removeFromCart(productController.product.id)
+                          : null,
+                      icon: Icon(
+                        Icons.remove,
+                        color: isInCart ? AppColors.textSecondary : AppColors.textSecondary.withOpacity(0.5),
+                        size: 20.w,
+                      ),
                     ),
-                  ),
-                  Obx(() => Text(
-                    '${controller.quantity.value}',
-                    style: AppTextStyles.bodyLarge.copyWith(
-                      fontWeight: FontWeight.w600,
+                    Text(
+                      isInCart ? '$quantity' : '1',
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  )),
-                  IconButton(
-                    onPressed: controller.incrementQuantity,
-                    icon: Icon(
-                      Icons.add,
-                      color: AppColors.textSecondary,
-                      size: 20.w,
+                    IconButton(
+                      onPressed: isInCart 
+                          ? () => cartController.addToCart(productController.product)
+                          : null,
+                      icon: Icon(
+                        Icons.add,
+                        color: isInCart ? AppColors.textSecondary : AppColors.textSecondary.withOpacity(0.5),
+                        size: 20.w,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              );
+            }),
             
             SizedBox(width: 16.w),
             
-            // Add to Cart Button
             Expanded(
-              child: Obx(() => ElevatedButton(
-                onPressed: controller.addToCart,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: controller.isInCart 
-                      ? AppColors.success 
-                      : AppColors.primary,
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
+              child: Obx(() {
+                final isInCart = cartController.isProductInCart(productController.product.id);
+                final quantity = cartController.getProductQuantity(productController.product.id);
+                
+                return ElevatedButton(
+                  onPressed: () {
+                    if (!isInCart) {
+                      cartController.addToCart(productController.product);
+                      Get.snackbar(
+                        'Added to Cart',
+                        '${productController.product.title} has been added to your cart',
+                        backgroundColor: AppColors.success.withOpacity(0.9),
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.BOTTOM,
+                        duration: const Duration(seconds: 2),
+                        margin: EdgeInsets.all(16.w),
+                        borderRadius: 12.r,
+                        icon: Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.white,
+                          size: 24.w,
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isInCart 
+                        ? AppColors.success 
+                        : AppColors.primary,
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
                   ),
-                ),
-                child: Text(
-                  controller.isInCart 
-                      ? 'Added to Cart' 
-                      : AppStrings.addToCart,
-                  style: AppTextStyles.button,
-                ),
-              )),
+                  child: Text(
+                    isInCart 
+                        ? '$quantity in Cart' 
+                        : AppStrings.addToCart,
+                    style: AppTextStyles.button,
+                  ),
+                );
+              }),
             ),
           ],
         ),

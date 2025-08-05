@@ -4,19 +4,19 @@ import 'app_colors.dart';
 
 class AppTextStyles {
   static TextStyle get heading1 => TextStyle(
-        fontSize: 32.sp,
+        fontSize: 28.sp,
         fontWeight: FontWeight.bold,
         color: AppColors.textPrimary,
       );
 
   static TextStyle get heading2 => TextStyle(
-        fontSize: 24.sp,
+        fontSize: 16.sp,
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       );
 
   static TextStyle get heading3 => TextStyle(
-        fontSize: 20.sp,
+        fontSize: 16.sp,
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       );

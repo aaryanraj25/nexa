@@ -16,101 +16,189 @@ class ProductInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(16.w),
-      padding: EdgeInsets.all(20.w),
+      margin: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16.r),
+        gradient: AppColors.cardGradient,
+        borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 8,
-            offset: Offset(0, 4),
+            color: AppColors.cardShadow,
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Product Title
-          Text(
-            product.title,
-            style: AppTextStyles.heading3,
-          ),
-          
-          SizedBox(height: 8.h),
-          
-          // Category
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 12.w,
-              vertical: 4.h,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              product.category.toUpperCase(),
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          
-          SizedBox(height: 12.h),
-          
-          // Rating
-          Row(
-            children: [
-              RatingBarIndicator(
-                rating: product.rating.rate,
-                itemBuilder: (context, index) => Icon(
-                  Icons.star,
-                  color: AppColors.warning,
+      child: Padding(
+        padding: EdgeInsets.all(24.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    product.title,
+                    style: AppTextStyles.heading2.copyWith(
+                      color: AppColors.textPrimary,
+                      height: 1.0,
+                    ),
+                  ),
                 ),
-                itemCount: 5,
-                itemSize: 20.w,
-                direction: Axis.horizontal,
+                SizedBox(width: 16.w),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.secondary.withOpacity(0.15),
+                        AppColors.accent.withOpacity(0.15),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(
+                      color: AppColors.secondary.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    '\$${product.price.toStringAsFixed(2)}',
+                    style: AppTextStyles.price.copyWith(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
+            SizedBox(height: 16.h),
+            
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 12.w,
+                vertical: 6.h,
               ),
-              SizedBox(width: 8.w),
-              Text(
-                '${product.rating.rate} (${product.rating.count} reviews)',
-                style: AppTextStyles.bodyMedium,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
               ),
-            ],
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Price
-          Text(
-            '\$${product.price.toStringAsFixed(2)}',
-            style: AppTextStyles.heading2.copyWith(
-              color: AppColors.primary,
+              child: Text(
+                product.category.toUpperCase(),
+                style: AppTextStyles.price.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.2,
+                ),
+              ),
             ),
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Description
-          Text(
-            'Description',
-            style: AppTextStyles.heading3.copyWith(
-              fontSize: 18.sp,
+            
+            SizedBox(height: 20.h),
+            
+            Row(
+              children: [
+                RatingBarIndicator(
+                  rating: product.rating.rate,
+                  itemBuilder: (context, index) => Icon(
+                    Icons.star,
+                    color: AppColors.secondary,
+                  ),
+                  itemCount: 5,
+                  itemSize: 20.w,
+                  direction: Axis.horizontal,
+                ),
+                SizedBox(width: 12.w),
+                Text(
+                  '${product.rating.rate}',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  '(${product.rating.count} reviews)',
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textLight,
+                  ),
+                ),
+              ],
             ),
-          ),
-          
-          SizedBox(height: 8.h),
-          
-          Text(
-            product.description,
-            style: AppTextStyles.bodyLarge.copyWith(
-              height: 1.5,
+            
+            SizedBox(height: 24.h),
+            
+            Divider(
+              color: AppColors.borderLight,
+              thickness: 1,
             ),
-          ),
-        ],
+            
+            SizedBox(height: 20.h),
+            
+            Text(
+              'Description',
+              style: AppTextStyles.heading3.copyWith(
+                color: AppColors.textPrimary,
+              ),
+            ),
+            
+            SizedBox(height: 12.h),
+            
+            Text(
+              product.description,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+                height: 1.6,
+              ),
+            ),
+            
+            SizedBox(height: 24.h),
+            
+            Container(
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceElevated,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(
+                  color: AppColors.borderLight,
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.local_shipping_outlined,
+                    color: AppColors.primary,
+                    size: 24.w,
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Free Shipping',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          'Delivered in 3-5 business days',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textLight,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
