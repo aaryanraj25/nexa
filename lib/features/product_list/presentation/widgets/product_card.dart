@@ -42,7 +42,7 @@ class ProductCard extends StatelessWidget {
             children: [
               // Product Image with Favorite Button
               Expanded(
-                flex: 3,
+                flex: 2,
                 child: Stack(
                   children: [
                     Container(
